@@ -1,0 +1,188 @@
+/* src/index.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.catalog-config {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tab {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.tab.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.bulk-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.selected-count {
+  font-weight: bold;
+}
+
+.bulk-action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.bulk-action-btn.include {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.bulk-action-btn.exclude {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.product-list {
+  display: grid;
+  gap: 15px;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.product-item input[type='checkbox'] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.product-item img {
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  border-radius: 4px;
+}
+
+.product-name {
+  flex-grow: 1;
+}
+
+.price-input {
+  width: 80px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.product-status {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 20px;
+  text-transform: capitalize;
+  text-align: left;
+}
+.product-price {
+  cursor: pointer;
+  /* margin-right: 20px; */
+}
+
+.product-price:hover {
+  text-decoration: underline;
+}
+
+.price-edit {
+  display: flex;
+  align-items: center;
+}
+
+.price-edit input[type='number'] {
+  width: 120px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.price-edit button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.price-edit .confirm-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.price-edit .cancel-btn {
+  background-color: #f44336;
+  color: white;
+  border-radius: 0 4px 4px 0;
+}
+
+@media (max-width: 768px) {
+  .bulk-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bulk-action-btn {
+    margin-top: 10px;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-item img {
+    margin-bottom: 10px;
+  }
+
+  .price-input {
+    margin-top: 10px;
+  }
+  .product-status {
+    margin-left: 0;
+  }
+}
