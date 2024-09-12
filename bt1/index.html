@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-container,
+        .list-container {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        .task {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .task.completed .task-title {
+            text-decoration: line-through;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .task-checkbox {
+            margin-right: 10px;
+            width: auto;
+            /* Thay đổi này giúp checkbox có kích thước phù hợp */
+        }
+
+        .task-title {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .task-description {
+            margin-top: 5px;
+            margin-left: 25px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .task-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-form {
+            margin-top: 10px;
+        }
+
+        .edit-form input,
+        .edit-form textarea {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .form-container,
+            .list-container {
+                width: 100%;
+            }
+
+            .form-buttons {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .form-buttons button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Add New Task</h2>
+            <form id="task-form">
+                <input type="text" id="task-title" placeholder="Task Title" required>
+                <textarea id="task-description" placeholder="Task Description"></textarea>
+                <div class="form-buttons">
+                    <button type="submit">Submit</button>
+                    <button type="button" id="clear-btn">Clear</button>
+                </div>
+            </form>
+        </div>
+        <div class="list-container">
+            <h2>Task List</h2>
+            <div id="task-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const taskForm = document.getElementById('task-form');
+        const taskList = document.getElementById('task-list');
+        const clearBtn = document.getElementById('clear-btn');
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const taskElement = document.createElement('div');
+                taskElement.classList.add('task');
+                if (task.completed) {
+                    taskElement.classList.add('completed');
+                }
+                taskElement.innerHTML = `
+                    <div class="task-header">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleComplete(${index})">
+                        <span class="task-title">${escapeHtml(task.title)}</span>
+                        <div class="task-buttons">
+                            <button onclick="editTask(${index})">Edit</button>
+                            <button onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    </div>
+                    <div class="task-description">${escapeHtml(task.description)}</div>
+                    ${task.editing ? `
+                        <div class="edit-form">
+                            <input type="text" id="edit-title-${index}" value="${escapeHtml(task.title)}">
+                            <textarea id="edit-description-${index}">${escapeHtml(task.description)}</textarea>
+                            <button onclick="saveEdit(${index})">Save</button>
+                        </div>
+                    ` : ''}
+                `;
+                taskList.appendChild(taskElement);
+            });
+            saveTasks();
+        }
+
+        function addTask(title, description) {
+            tasks.unshift({ title, description, completed: false, editing: false });
+            renderTasks();
+        }
+
+        function toggleComplete(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTasks();
+        }
+
+        function editTask(index) {
+            tasks[index].editing = true;
+            renderTasks();
+        }
+
+        function saveEdit(index) {
+            const newTitle = document.getElementById(`edit-title-${index}`).value;
+            const newDescription = document.getElementById(`edit-description-${index}`).value;
+            tasks[index].title = newTitle;
+            tasks[index].description = newDescription;
+            tasks[index].editing = false;
+            renderTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            addTask(title, description);
+            taskForm.reset();
+        });
+
+        clearBtn.addEventListener('click', () => {
+            taskForm.reset();
+        });
+
+        renderTasks();
+    </script>
+</body>
+
+</html>
